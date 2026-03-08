@@ -1,0 +1,9 @@
+#enviroment
+.env
+
+#pycache
+__pycache__/
+*.pyc
+*.pyo
+
+.vscode/
