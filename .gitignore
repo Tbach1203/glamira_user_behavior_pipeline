@@ -9,9 +9,7 @@ __pycache__/
 .vscode/
 
 #raw data 
-data/raw/*.BIN
-data/raw/*.csv
-data/raw/*.json
+data/raw/*
 
 #processed data
 data/processed/*.csv

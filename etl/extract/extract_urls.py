@@ -13,7 +13,6 @@ EVENTS = [
 ]
 
 SPECIAL_EVENTS = "product_view_all_recommend_clicked"
-MAX_URL_PER_PRODUCT = 10
 
 def product_map(db):
     logging.info("Start extracting product urls")
@@ -32,7 +31,11 @@ def product_map(db):
                     "$ifNull": ["$product_id", "$viewing_product_id"]
                 },
                 "url": {
-                    "$ifNull": ["$current_url", "$referrer_url"]
+                    "$cond": [
+                        {"$eq": ["$collection", SPECIAL_EVENTS]},
+                        "$referrer_url",
+                        "$current_url"
+                    ]
                 }
             }
         },
@@ -61,9 +64,10 @@ def product_map(db):
         pid = doc["_id"]["product_id"]
         url = doc["_id"]["url"]
         if pid not in products:
-            products[pid] = []
-        if len(products[pid]) < MAX_URL_PER_PRODUCT:
-            products[pid].append(url)
+            products[pid] = set()
+        products[pid].add(url)
+    # convert set 
+    products = {k: list(v) for k, v in products.items()}
     logging.info(f"Collected {len(products)} unique product_ids")
     return products
 
