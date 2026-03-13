@@ -10,6 +10,8 @@ __pycache__/
 
 #raw data 
 data/raw/*.BIN
+data/raw/*.csv
+data/raw/*.json
 
 #processed data
 data/processed/*.csv

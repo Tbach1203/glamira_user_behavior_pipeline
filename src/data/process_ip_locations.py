@@ -2,11 +2,8 @@ import IP2Location
 import pandas as pd
 from config.connect import connect
 
-def process_ip_locations(bin_file, output_location):
-    client = connect()
-    db = client["countly"]
+def process_ip_locations(bin_file, output_location, db):
     collection = db["summary"]
-
     #Read unique IPs
     ips = collection.aggregate([{"$group": {"_id": "$ip"}}])
     #print(list(ips))
