@@ -74,5 +74,10 @@ def product_map(db):
 def save_urls(products, output_path):
     logging.info(f"Saving results to {output_path}")
     with open(output_path, "w", encoding="utf-8") as f:
-        json.dump(products, f, ensure_ascii=False, indent=2)
-    logging.info("Saved JSON successfully")
+        for pid, urls in products.items():
+            record = {
+                "product_id": pid,
+                "urls": urls
+            }
+            f.write(json.dumps(record, ensure_ascii=False) + "\n")
+    logging.info("Saved JSONL successfully")

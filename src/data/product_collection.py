@@ -20,15 +20,7 @@ TIMEOUT = aiohttp.ClientTimeout(total=10)
 async def fetch_product(session, url):
     for attempt in range(MAX_RETRIES):
         try:
-            headers = {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
-                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-                "Accept-Language": "en-US,en;q=0.9",
-                "Accept-Encoding": "gzip, deflate, br",
-                "Connection": "keep-alive",
-                "Upgrade-Insecure-Requests": "1",
-            }
-            async with session.get(url, headers=headers) as response:
+            async with session.get(url) as response:
                 status = response.status
                 if status == 200:
                     html = await response.text()
@@ -80,7 +72,7 @@ async def fetch_product(session, url):
             await asyncio.sleep(sleep)
     return None
 
-async def worker(session, semaphore, product_id, urls, failed_products):
+async def worker(session, semaphore, product_id, urls, fallback_products, failed_products):
     async with semaphore:
         # Try original URLs
         for url in urls:
@@ -90,75 +82,84 @@ async def worker(session, semaphore, product_id, urls, failed_products):
                     "product_id": product_id,
                     **info
                 }
-
-        # Try fallback URL
+        # Fallback URLs 
         fallback_url = FALLBACK_URL.format(product_id)
         logging.info(f"Trying fallback URL for product {product_id}")
         info = await fetch_product(session, fallback_url)
         if info:
+            fallback_products.add(product_id)
             return {
                 "product_id": product_id,
                 **info
             }
-        
-        # If still failed → log product_id
-        failed_products.append(product_id)
+        #Failed 
+        failed_products.add(product_id)
         logging.warning(f"Product failed completely: {product_id}")
         return None
 
-async def crawl_product(products):
-    failed_products = []
+async def crawl_product(products, output_path):
+    failed_products = set()
     semaphore = asyncio.Semaphore(CONCURRENT_REQUESTS)
     connector = aiohttp.TCPConnector(limit=CONCURRENT_REQUESTS)
-    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/125.0.0.0 Safari/537.36"}
     async with aiohttp.ClientSession(
         timeout=TIMEOUT,
-        connector=connector,
-        headers=headers
+        connector=connector
     ) as session:
         tasks = [
             worker(session, semaphore, pid, urls, failed_products)
             for pid, urls in products.items()
         ]
-        results = []
-        for future in tqdm(
-            asyncio.as_completed(tasks),
-            total=len(tasks),
-            desc="Crawling products"
-        ):
-            try:
-                result = await future
-                if result:
-                    results.append(result)
-            except Exception as e:
-                logging.warning(f"Worker failed: {e}")
-    return results, failed_products
+        with open(output_path, "w", encoding="utf-8") as f:
+            for future in tqdm(
+                asyncio.as_completed(tasks),
+                total=len(tasks),
+                desc="Crawling products"
+            ):
+                try:
+                    result = await future
+                    if result:
+                        f.write(
+                            json.dumps(result, ensure_ascii=False)
+                            + "\n"
+                        )
+                except Exception as e:
+                    logging.warning(f"Worker failed: {e}")
+    return list(failed_products)
 
-def load_urls(json_path):
-    logging.info(f"Loading urls from {json_path}")
-    with open(json_path, "r", encoding="utf-8") as f:
-        return json.load(f)
+def load_urls(jsonl_path):
+    logging.info(f"Loading urls from {jsonl_path}")
+    products = {}
+    with open(jsonl_path, "r", encoding="utf-8") as f:
+        for line in f:
+            record = json.loads(line.strip())
+            pid = record["product_id"]
+            urls = record["urls"]
+            products[pid] = urls
+    logging.info(f"Loaded {len(products)} products")
+    return products
     
-def save_results_json(results, path):
-    logging.info(f"Saving results to {path}")
+def save_product_info(results, path):
+    logging.info(f"Saving results to {path} (JSONL format)")
     with open(path, "w", encoding="utf-8") as f:
-        json.dump(results, f, ensure_ascii=False, indent=2)
-    logging.info("Saved JSON successfully")
+        for item in results:
+            json_line = json.dumps(item, ensure_ascii=False)
+            f.write(json_line + "\n")
+    logging.info("Saved JSONL successfully")
 
-def save_failed_products(failed_products, path):
+def save_error_products(failed_products, path):
     logging.info(f"Saving failed product_ids to {path}")
     with open(path, "w") as f:
         for pid in failed_products:
             f.write(str(pid) + "\n")
 
-def collect_product(urls_path, output_path, error_product_id_path):
+def collect_product(urls_path, output_path, failed_path):
     products = load_urls(urls_path)
     logging.info(f"{len(products)} products loaded")
     logging.info("Start crawling pipeline")
-    results, failed_products = asyncio.run(crawl_product(products))
+    failed_products = asyncio.run(
+        crawl_product(products, output_path)
+    )
     logging.info("Collect finished")
-    save_results_json(results, output_path)
-    logging.info(f"Saved results to {output_path}")
     if failed_products:
-        save_failed_products(failed_products, error_product_id_path)
-        logging.info(f"{len(failed_products)} products failed")
+        save_error_products(failed_products, failed_path)
+        logging.info(f"{len(failed_products)} products failed completely")
