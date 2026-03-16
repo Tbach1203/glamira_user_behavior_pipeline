@@ -3,6 +3,7 @@ from src.data.process_ip_locations import process_ip_locations
 from etl.extract.extract_urls import product_map, save_urls
 from src.data.product_collection import collect_product
 from config.connect import connect
+from src.data.process_error_product_id import retry_failed_products
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -45,5 +46,6 @@ if __name__ == "__main__":
     # products = product_map(db)
     # save_urls(products, arg.urls_path)
     collect_product(arg.urls_path, arg.output_product_path, arg.failed_product_path)
+    # retry_failed_products(arg.failed_product_path, arg.output_product_path)
 
     
