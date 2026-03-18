@@ -8,7 +8,6 @@ import re
 from bs4 import BeautifulSoup
 from tqdm.asyncio import tqdm
 
-
 logging.basicConfig(level=logging.INFO)
 
 FALLBACK_URL = "https://www.glamira.com/catalog/product/view/id/{}"
@@ -16,7 +15,6 @@ FALLBACK_URL = "https://www.glamira.com/catalog/product/view/id/{}"
 MAX_RETRIES = 5
 CONCURRENT_REQUESTS = 20
 TIMEOUT = aiohttp.ClientTimeout(total=10)
-
 
 async def fetch_product(session, url):
     for attempt in range(MAX_RETRIES):
@@ -78,7 +76,6 @@ async def fetch_product(session, url):
             await asyncio.sleep(sleep)
     return None
 
-
 async def worker(session, semaphore, product_id, urls, failed_products):
     async with semaphore:
         # Try original URLs
@@ -89,7 +86,6 @@ async def worker(session, semaphore, product_id, urls, failed_products):
                     "product_id": product_id,
                     **info
                 }
-
         # Fallback URLs 
         fallback_url = FALLBACK_URL.format(product_id)
         logging.info(f"Trying fallback URL for product {product_id}")
@@ -99,12 +95,10 @@ async def worker(session, semaphore, product_id, urls, failed_products):
                 "product_id": product_id,
                 **info
             }
-
         # Failed 
         failed_products.add(product_id)
         logging.warning(f"Product failed completely: {product_id}")
         return None
-
 
 async def crawl_product(products, output_path):
     failed_products = set()
@@ -120,7 +114,6 @@ async def crawl_product(products, output_path):
             worker(session, semaphore, pid, urls, failed_products)
             for pid, urls in products.items()
         ]
-
         with open(output_path, "w", encoding="utf-8") as f:
             for future in tqdm(
                 asyncio.as_completed(tasks),
@@ -136,9 +129,7 @@ async def crawl_product(products, output_path):
                         )
                 except Exception as e:
                     logging.warning(f"Worker failed: {e}")
-
     return list(failed_products)
-
 
 def load_urls(jsonl_path):
     logging.info(f"Loading urls from {jsonl_path}")
@@ -167,18 +158,12 @@ def save_error_products(failed_products, path):
         for pid in failed_products:
             f.write(str(pid) + "\n")
 
-
 def collect_product(urls_path, output_path, failed_path):
     products = load_urls(urls_path)
     logging.info(f"{len(products)} products loaded")
     logging.info("Start crawling pipeline")
-
-    failed_products = asyncio.run(
-        crawl_product(products, output_path)
-    )
-
+    failed_products = asyncio.run(crawl_product(products, output_path))
     logging.info("Collect finished")
-
     if failed_products:
         save_error_products(failed_products, failed_path)
         logging.info(f"{len(failed_products)} products failed completely")

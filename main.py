@@ -3,7 +3,7 @@ from src.data.process_ip_locations import process_ip_locations
 from etl.extract.extract_urls import product_map, save_urls
 from src.data.product_collection import collect_product
 from config.connect import connect
-from src.data.process_error_product_id import retry_failed_products
+from etl.load.load_data_to_mongodb import export_to_mongodb
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -33,19 +33,19 @@ def parse_args():
     )
     parser.add_argument(
         "--failed-product-path",
-        default="data/raw/error_403_id.txt",
+        default="data/raw/error_id.txt",
         help="Path to list failed crawl product id"
     )
     return parser.parse_args()
 
 if __name__ == "__main__":
     arg = parse_args()
-    # client = connect()
-    # db = client["countly"]
-    #process_ip_locations(arg.bin_file, arg.output_location_csv, db)
+    client = connect()
+    db = client["countly"]
+    # process_ip_locations(arg.bin_file, arg.output_location_path, db)
     # products = product_map(db)
     # save_urls(products, arg.urls_path)
-    collect_product(arg.urls_path, arg.output_product_path, arg.failed_product_path)
-    # retry_failed_products(arg.failed_product_path, arg.output_product_path)
+    # collect_product(arg.urls_path, arg.output_product_path, arg.failed_product_path)
+    export_to_mongodb(arg.output_location_path, arg.output_product_path, db)
 
     
