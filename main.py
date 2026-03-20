@@ -4,6 +4,7 @@ from etl.extract.extract_urls import product_map, save_urls
 from src.data.product_collection import collect_product
 from config.connect import connect
 from etl.load.load_data_to_mongodb import export_to_mongodb
+from etl.load.load_data_to_gcs import export_to_gcs
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -12,13 +13,13 @@ def parse_args():
 
     parser.add_argument(
         "--bin-file",
-        default="IP-COUNTRY-REGION-CITY.BIN",
+        default="data/raw/IP-COUNTRY-REGION-CITY.BIN",
         #required=True,
         help="Path to IP2Location BIN file"
     )
     parser.add_argument(
         "--output-location-path",
-        default="data/raw/ip_locations.csv",
+        default="data/raw/ip_locations.jsonl",
         help="Path to output CSV location file"
     )
     parser.add_argument(
@@ -46,6 +47,7 @@ if __name__ == "__main__":
     # products = product_map(db)
     # save_urls(products, arg.urls_path)
     # collect_product(arg.urls_path, arg.output_product_path, arg.failed_product_path)
-    export_to_mongodb(arg.output_location_path, arg.output_product_path, db)
+    # export_to_mongodb(arg.output_location_path, arg.output_product_path, db)
+    export_to_gcs(arg.output_location_path, arg.output_product_path, db)
 
     

@@ -2,7 +2,6 @@ import asyncio
 import random
 import logging
 import aiohttp
-import pandas as pd
 import json
 import re
 from bs4 import BeautifulSoup
@@ -104,12 +103,10 @@ async def crawl_product(products, output_path):
     failed_products = set()
     semaphore = asyncio.Semaphore(CONCURRENT_REQUESTS)
     connector = aiohttp.TCPConnector(limit=CONCURRENT_REQUESTS)
-
     async with aiohttp.ClientSession(
         timeout=TIMEOUT,
         connector=connector
     ) as session:
-
         tasks = [
             worker(session, semaphore, pid, urls, failed_products)
             for pid, urls in products.items()
@@ -150,7 +147,6 @@ def save_product_info(results, path):
             json_line = json.dumps(item, ensure_ascii=False)
             f.write(json_line + "\n")
     logging.info("Saved JSONL successfully")
-
 
 def save_error_products(failed_products, path):
     logging.info(f"Saving failed product_ids to {path}")

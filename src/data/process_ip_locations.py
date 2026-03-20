@@ -1,30 +1,41 @@
 import IP2Location
-import pandas as pd
-from config.connect import connect
+import json
+import logging
 
-def process_ip_locations(bin_file, output_location, db):
+logging.basicConfig(level=logging.INFO)
+
+def process_ip_locations(bin_file, output_path, db):
+    logging.info("Start processing IP locations")
     collection = db["summary"]
-    #Read unique IPs
-    ips = collection.aggregate([{"$group": {"_id": "$ip"}}])
-    #print(list(ips))
-
-    #Load IP2Location database
+    # Aggregate unique IPs
+    logging.info("Fetching unique IPs from MongoDB")
+    ips_cursor = collection.aggregate([
+        {"$group": {"_id": "$ip"}}
+    ])
+    # Load IP2Location
+    logging.info(f"Loading IP2Location BIN: {bin_file}")
     location = IP2Location.IP2Location(bin_file)
-    results = []
-    for doc in ips:
-        ip = doc["_id"]
-        try:
-            record = location.get_all(ip)
-            data = {
-                "ip": ip,
-                "country": record.country_long,
-                "region": record.region,
-                "city": record.city
-            }
-            results.append(data)
-        except Exception as e:
-            print(f"Error with IP {ip}: {e}")
+    total = 0
+    success = 0
+    failed = 0
+    logging.info(f"Writing output to {output_path} (JSONL format)")
+    with open(output_path, "w", encoding="utf-8") as f:
+        for doc in ips_cursor:
+            total += 1
+            ip = doc["_id"]
+            try:
+                record = location.get_all(ip)
 
-    #Save to csv
-    df = pd.DataFrame(results)
-    df.to_csv(output_location, index=False)
+                result = {
+                    "ip": ip,
+                    "country": record.country_long,
+                    "region": record.region,
+                    "city": record.city
+                }
+                f.write(json.dumps(result, ensure_ascii=False) + "\n")
+                success += 1
+            except Exception as e:
+                failed += 1
+                logging.warning(f"Error processing IP {ip}: {e}")
+    logging.info("Processing completed")
+    logging.info(f"Total: {total}, Success: {success}, Failed: {failed}")
