@@ -35,14 +35,32 @@ def upload_product_info(local_path, destination_name):
             "bracelet_without_chain", "show_popup_quantity_eternity",
             "visible_contents", "gender"
         ]
+        def convert_value(value):
+            if isinstance(value, str):
+                v = value.strip()
+                if v.isdigit():
+                    return int(v)
+                try:
+                    return float(v)
+                except:
+                    return value
+            return value
+        def normalize_data(obj):
+            if isinstance(obj, dict):
+                return {k: normalize_data(v) for k, v in obj.items()}
+            elif isinstance(obj, list):
+                return [normalize_data(item) for item in obj]
+            else:
+                return convert_value(obj)
         with blob.open("wb") as gcs_file:
             with open(local_path, "r", encoding="utf-8") as f:
                 for line in f:
                     data = json.loads(line)
                     cleaned = {k: data.get(k) for k in FIELDS if k in data}
-
-                    gcs_file.write((json.dumps(cleaned, ensure_ascii=False) + "\n").encode("utf-8"))
-
+                    cleaned = normalize_data(cleaned)
+                    gcs_file.write(
+                        (json.dumps(cleaned, ensure_ascii=False) + "\n").encode("utf-8")
+                    )
         logging.info(f"Uploaded cleaned data → gs://{BUCKET_NAME}/{destination_name}")
     except Exception as e:
         logging.error(f"Upload failed: {e}")
