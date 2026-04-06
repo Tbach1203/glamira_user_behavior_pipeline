@@ -1,0 +1,29 @@
+[0m17:19:52.985946 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001B29E2194C0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001B29DD05220>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001B29BB25E80>]}
+
+
+============================== 17:19:52.985946 | 3302d895-e034-486e-be5b-4ba2c32a735b ==============================
+[0m17:19:52.985946 [info ] [MainThread]: Running with dbt=1.11.7
+[0m17:19:52.985946 [debug] [MainThread]: running dbt with arguments {'static_parser': 'True', 'no_print': 'None', 'version_check': 'True', 'target_path': 'None', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'printer_width': '80', 'write_json': 'True', 'introspect': 'True', 'log_cache_events': 'False', 'empty': 'None', 'cache_selected_only': 'False', 'fail_fast': 'False', 'debug': 'False', 'log_format': 'default', 'partial_parse': 'True', 'send_anonymous_usage_stats': 'True', 'quiet': 'False', 'warn_error': 'None', 'profiles_dir': 'C:\\Users\\ASUS\\.dbt', 'use_colors': 'True', 'indirect_selection': 'eager', 'invocation_command': 'dbt init', 'use_experimental_parser': 'False', 'log_path': 'logs'}
+[0m17:20:52.645140 [debug] [MainThread]: Starter project path: C:\Users\ASUS\AppData\Local\pypoetry\Cache\virtualenvs\glamira-user-behavior-pipeline-gUmOsOXc-py3.12\Lib\site-packages\dbt\include\starter_project
+[0m17:20:52.678597 [info ] [MainThread]: 
+Your new dbt project "dbt_pipeline" was created!
+
+For more information on how to configure the profiles.yml file,
+please consult the dbt documentation here:
+
+  https://docs.getdbt.com/docs/configure-your-profile
+
+One more thing:
+
+Need help? Don't hesitate to reach out to us via GitHub issues or on Slack:
+
+  https://community.getdbt.com/
+
+Happy modeling!
+
+[0m17:20:52.678597 [info ] [MainThread]: Setting up your profile.
+[0m17:23:08.086507 [info ] [MainThread]: Profile dbt_pipeline written to C:\Users\ASUS\.dbt\profiles.yml using target's profile_template.yml and your supplied values. Run 'dbt debug' to validate the connection.
+[0m17:23:08.090475 [debug] [MainThread]: Command `dbt init` succeeded at 17:23:08.090475 after 195.22 seconds
+[0m17:23:08.090475 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001B29DD05220>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001B2B3015010>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001B2B2C117C0>]}
+[0m17:23:08.090475 [debug] [MainThread]: Flushing usage events
+[0m17:23:09.696523 [debug] [MainThread]: An error was encountered while trying to flush usage events

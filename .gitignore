@@ -11,5 +11,7 @@ __pycache__/
 #raw data 
 data/raw/*
 
-#processed data
-data/processed/*.csv
+#dbt
+dbt_pipeline/target/
+dbt_pipeline/dbt_packages/
+dbt_pipeline/logs/
