@@ -6,9 +6,9 @@ SELECT
   device_id,
   store_id,
   order_id,
-  cart_products.product_id AS product_id,
+  SAFE_CAST(cart_products.product_id AS INT) AS product_id,
   cart_products.amount AS order_qty,
-  cart_products.price AS order_total_amount,
+  SAFE_CAST(cart_products.price AS NUMERIC) AS order_total_amount,
   cart_products.currency AS currency_code,
   SAFE_CAST(local_time AS DATE) AS order_local_time,
   time_stamp AS order_timestamp
