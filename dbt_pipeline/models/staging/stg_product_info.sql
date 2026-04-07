@@ -8,4 +8,4 @@ SELECT
   SAFE_CAST(max_price AS NUMERIC) AS max_price,
   qty AS product_qty,
   TRIM(REGEXP_REPLACE(min_price_format, r'[\d,\.]', '')) as currency_symbol
-FROM `glowing-market-485009-u8.raw_layer.product_info` 
+FROM raw_layer.product_info
