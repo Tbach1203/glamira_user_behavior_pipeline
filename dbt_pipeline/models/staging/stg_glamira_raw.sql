@@ -10,7 +10,7 @@ SELECT
   cart_products.amount AS order_qty,
   SAFE_CAST(cart_products.price AS NUMERIC) AS order_total_amount,
   cart_products.currency AS currency_code,
-  SAFE_CAST(local_time AS DATE) AS order_local_time,
+  DATE(PARSE_TIMESTAMP('%Y-%m-%d %H:%M:%S', local_time)) AS order_local_time,
   time_stamp AS order_timestamp
 FROM raw_layer.glamira_raw,
 UNNEST(cart_products) AS cart_products
