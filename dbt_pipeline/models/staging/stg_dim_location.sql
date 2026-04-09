@@ -1,4 +1,4 @@
-SELECT 
+SELECT DISTINCT
     ip AS ip_address,
     country AS country_name,
     region AS region_name,

@@ -1,4 +1,4 @@
-SELECT
+SELECT DISTINCT
   ip AS ip_address,
   user_agent,
   resolution,
@@ -6,6 +6,7 @@ SELECT
   device_id,
   store_id,
   order_id,
+  email_address,
   SAFE_CAST(cart_products.product_id AS INT) AS product_id,
   cart_products.amount AS order_qty,
   SAFE_CAST(cart_products.price AS NUMERIC) AS order_total_amount,

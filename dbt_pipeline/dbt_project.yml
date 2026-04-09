@@ -36,4 +36,4 @@ models:
       +materialized: view
     intermediate:
       +schema: intermediate
-      +materialized: table
+      +materialized: view

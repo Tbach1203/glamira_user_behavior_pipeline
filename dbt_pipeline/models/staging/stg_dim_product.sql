@@ -1,4 +1,4 @@
-SELECT 
+SELECT DISTINCT
   product_id,
   name AS product_name,
   category AS category_id,
