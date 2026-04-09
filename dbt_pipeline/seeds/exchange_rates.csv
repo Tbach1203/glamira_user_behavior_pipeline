@@ -1,0 +1,32 @@
+currency_code,currency_name,symbol,rate_to_usd,rate_from_usd
+USD,US Dollar,$,1.0,1.0
+EUR,Euro,€,0.93,1.08
+GBP,British Pound,£,0.8,1.25
+JPY,Japanese Yen,¥,155.0,0.0065
+CNY,Chinese Yuan,¥,7.2,0.139
+VND,Vietnamese Dong,₫,24500.0,4.1e-05
+KRW,South Korean Won,₩,1350.0,0.00074
+INR,Indian Rupee,₹,83.0,0.012
+AUD,Australian Dollar,A$,1.5,0.67
+CAD,Canadian Dollar,C$,1.36,0.73
+CHF,Swiss Franc,CHF,0.9,1.11
+SGD,Singapore Dollar,S$,1.35,0.74
+HKD,Hong Kong Dollar,HK$,7.8,0.128
+NZD,New Zealand Dollar,NZ$,1.6,0.625
+SEK,Swedish Krona,kr,10.5,0.095
+NOK,Norwegian Krone,kr,10.8,0.093
+DKK,Danish Krone,kr,6.9,0.145
+PLN,Polish Zloty,zł,4.0,0.25
+HUF,Hungarian Forint,Ft,360.0,0.0028
+CZK,Czech Koruna,Kč,23.0,0.043
+TRY,Turkish Lira,₺,32.0,0.031
+RUB,Russian Ruble,₽,92.0,0.0109
+BRL,Brazilian Real,R$,5.1,0.196
+MXN,Mexican Peso,$,17.0,0.059
+ZAR,South African Rand,R,18.5,0.054
+AED,UAE Dirham,د.إ,3.67,0.272
+SAR,Saudi Riyal,﷼,3.75,0.267
+THB,Thai Baht,฿,36.0,0.027
+MYR,Malaysian Ringgit,RM,4.7,0.213
+IDR,Indonesian Rupiah,Rp,15500.0,6.4e-05
+PHP,Philippine Peso,₱,57.0,0.0175

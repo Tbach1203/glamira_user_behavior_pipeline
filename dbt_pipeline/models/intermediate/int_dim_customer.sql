@@ -3,7 +3,7 @@ WITH deduped_customer AS (
         ROW_NUMBER() OVER (
             PARTITION BY user_id
         ) AS rn
-    FROM {{ ref('stg_glamira_raw') }}
+    FROM {{ ref('stg_fact_sales_order') }}
 )
 
 SELECT

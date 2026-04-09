@@ -1,7 +1,7 @@
 WITH distinct_date AS (
     SELECT DISTINCT
         order_local_time AS full_date,
-    FROM {{ ref('stg_glamira_raw')}}
+    FROM {{ ref('stg_fact_sales_order')}}
 )
 
 SELECT 

@@ -8,4 +8,4 @@ SELECT DISTINCT
     min_price,
     max_price,
     currency_symbol
-FROM {{ ref('stg_product_info') }}
+FROM {{ ref('stg_dim_product') }}
