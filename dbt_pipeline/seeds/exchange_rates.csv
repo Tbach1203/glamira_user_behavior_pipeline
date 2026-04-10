@@ -1,32 +1,63 @@
 currency_code,currency_name,symbol,rate_to_usd,rate_from_usd
-USD,US Dollar,$,1.0,1.0
-EUR,Euro,€,0.93,1.08
-GBP,British Pound,£,0.8,1.25
-JPY,Japanese Yen,¥,155.0,0.0065
-CNY,Chinese Yuan,¥,7.2,0.139
-VND,Vietnamese Dong,₫,24500.0,4.1e-05
-KRW,South Korean Won,₩,1350.0,0.00074
-INR,Indian Rupee,₹,83.0,0.012
-AUD,Australian Dollar,A$,1.5,0.67
-CAD,Canadian Dollar,C$,1.36,0.73
-CHF,Swiss Franc,CHF,0.9,1.11
-SGD,Singapore Dollar,S$,1.35,0.74
-HKD,Hong Kong Dollar,HK$,7.8,0.128
-NZD,New Zealand Dollar,NZ$,1.6,0.625
-SEK,Swedish Krona,kr,10.5,0.095
-NOK,Norwegian Krone,kr,10.8,0.093
-DKK,Danish Krone,kr,6.9,0.145
-PLN,Polish Zloty,zł,4.0,0.25
-HUF,Hungarian Forint,Ft,360.0,0.0028
-CZK,Czech Koruna,Kč,23.0,0.043
-TRY,Turkish Lira,₺,32.0,0.031
-RUB,Russian Ruble,₽,92.0,0.0109
-BRL,Brazilian Real,R$,5.1,0.196
-MXN,Mexican Peso,$,17.0,0.059
-ZAR,South African Rand,R,18.5,0.054
-AED,UAE Dirham,د.إ,3.67,0.272
-SAR,Saudi Riyal,﷼,3.75,0.267
-THB,Thai Baht,฿,36.0,0.027
-MYR,Malaysian Ringgit,RM,4.7,0.213
-IDR,Indonesian Rupiah,Rp,15500.0,6.4e-05
-PHP,Philippine Peso,₱,57.0,0.0175
+USD,US Dollar,$,1.000000,1.000000
+EUR,Euro,€,1.168872,0.855525
+GBP,British Pound,£,1.342377,0.744947
+JPY,Japanese Yen,¥,0.006282,159.188728
+AUD,Australian Dollar,A$,0.707115,1.414196
+CAD,Canadian Dollar,C$,0.723289,1.382572
+CHF,Swiss Franc,Fr,1.263733,0.791307
+CNY,Chinese Yuan Renminbi,¥,0.146391,6.831042
+HKD,Hong Kong Dollar,HK$,0.127649,7.833960
+SGD,Singapore Dollar,S$,0.785188,1.273580
+NZD,New Zealand Dollar,NZ$,0.584890,1.709723
+SEK,Swedish Krona,kr,0.107486,9.303533
+NOK,Norwegian Krone,kr,0.105201,9.505609
+DKK,Danish Krone,kr,0.156424,6.392896
+KRW,South Korean Won,₩,0.000677,1478.081673
+INR,Indian Rupee,₹,0.010810,92.503588
+MYR,Malaysian Ringgit,RM,0.251214,3.980664
+THB,Thai Baht,฿,0.031145,32.107685
+PHP,Philippine Peso,₱,0.016746,59.716369
+IDR,Indonesian Rupiah,Rp,0.000059,17079.912089
+TWD,Taiwan New Dollar,NT$,0.031449,31.797224
+VND,Vietnamese Dong,₫,0.000038,26230.000000
+BND,Bruneian Dollar,B$,0.785188,1.273580
+KWD,Kuwaiti Dinar,KD,3.240835,0.308562
+SAR,Saudi Arabian Riyal,SR,0.266667,3.750000
+AED,Emirati Dirham,AED,0.272294,3.672500
+QAR,Qatari Riyal,QR,0.274725,3.640000
+BHD,Bahraini Dinar,BD,2.659574,0.376000
+OMR,Omani Rial,RO,2.597980,0.384914
+ILS,Israeli Shekel,₪,0.327280,3.055487
+TRY,Turkish Lira,₺,0.022397,44.648674
+RUB,Russian Ruble,₽,0.012881,77.634453
+PLN,Polish Zloty,zł,0.275205,3.633657
+CZK,Czech Koruna,Kč,0.047956,20.852579
+HUF,Hungarian Forint,Ft,0.003102,322.375372
+RON,Romanian New Leu,lei,0.229545,4.356442
+ZAR,South African Rand,R,0.060897,16.421049
+MXN,Mexican Peso,$,0.057529,17.382530
+BRL,Brazilian Real,R$,0.197133,5.072716
+ARS,Argentine Peso,$,0.000723,1382.318748
+CLP,Chilean Peso,$,0.001119,893.523579
+COP,Colombian Peso,$,0.000274,3650.617142
+PKR,Pakistani Rupee,₨,0.003584,279.013751
+LKR,Sri Lankan Rupee,Rs,0.003174,315.027952
+NPR,Nepalese Rupee,Rs,0.006753,148.075119
+BDT,Bangladeshi Taka,৳,0.008700,114.943000
+KZT,Kazakhstani Tenge,₸,0.002095,477.338283
+IRR,Iranian Rial,﷼,0.000001,1315720.435912
+LYD,Libyan Dinar,LD,0.157234,6.359942
+MUR,Mauritian Rupee,Rs,0.021474,46.567728
+ISK,Icelandic Krona,kr,0.008153,122.660240
+BWP,Botswana Pula,P,0.074477,13.426977
+TTD,Trinidadian Dollar,TT$,0.147521,6.778714
+EGP,Egyptian Pound,£,0.020380,49.067000
+NGN,Nigerian Naira,₦,0.000620,1612.900000
+GHS,Ghanaian Cedi,₵,0.064100,15.600000
+KES,Kenyan Shilling,KSh,0.007740,129.200000
+UAH,Ukrainian Hryvnia,₴,0.024100,41.494000
+HRK,Croatian Kuna,kn,0.132960,7.521000
+BGN,Bulgarian Lev,лв,0.551400,1.814300
+MAD,Moroccan Dirham,MAD,0.099700,10.030000
+JOD,Jordanian Dinar,JD,1.410000,0.709200
