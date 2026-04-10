@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: glamira_src  
+    database: glowing-market-485009-u8  
+    schema: raw_layer     
+    tables:
+      - name: ip_locations       
+
+      - name: product_info    
+      
+      - name: glamira_raw

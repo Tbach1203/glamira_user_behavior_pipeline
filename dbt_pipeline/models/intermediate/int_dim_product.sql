@@ -1,4 +1,4 @@
-SELECT DISTINCT
+SELECT 
     FARM_FINGERPRINT(CAST(product_id AS STRING)) AS product_key,
     product_id,
     product_name,
