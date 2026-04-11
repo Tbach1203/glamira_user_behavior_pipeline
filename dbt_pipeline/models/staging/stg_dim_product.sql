@@ -2,7 +2,7 @@ WITH stg_dim_product__rename_col AS (
   SELECT
     product_id,
     name AS product_name,
-    category AS category_id,
+    SAFE_CAST(category AS INT) AS category_id,
     category_name,
     SAFE_CAST(price AS NUMERIC) AS unit_price,
     SAFE_CAST(min_price AS NUMERIC) AS min_price,

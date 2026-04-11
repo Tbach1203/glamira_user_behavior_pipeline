@@ -11,11 +11,27 @@ int_dim_customer__gen_key AS (
         device_id,
         user_agent,
         resolution,
-        email_address,
-        ip_address
+        email_address
     FROM int_dim_customer__deduplicated
     WHERE rn = 1
+),
+
+int_dim_customer__default_row AS (
+    SELECT
+        -1 AS customer_key,   
+        'Unknown' AS user_id,
+        'Unknown' AS device_id,
+        'Unknown' AS user_agent,
+        'Unknown' AS resolution,
+        'Unknown' AS email_address
+),
+
+int_dim_customer__final AS (
+    SELECT *
+    FROM int_dim_customer__gen_key 
+    UNION ALL
+    SELECT * FROM int_dim_customer__default_row
 )
 
-SELECT * FROM int_dim_customer__gen_key
+SELECT * FROM int_dim_customer__final
 
