@@ -1,0 +1,34 @@
+version: 2
+
+models:
+  - name: dim_date
+    description: "Date dimension table"
+    columns:
+      - name: date_key
+        description: "Surrogate key"
+        tests:
+          - not_null
+          - unique
+
+      - name: full_date
+        description: "Calendar date"
+        tests:
+          - unique
+
+  - name: dim_location
+    description: "Location dimension table"
+    columns:
+      - name: location_key
+        description: "Surrogate key"
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_customer
+    description: "Customer dimension table"
+    columns:
+      - name: location_key
+        description: "Surrogate key"
+        tests:
+          - not_null
+          - unique

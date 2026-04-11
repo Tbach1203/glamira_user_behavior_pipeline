@@ -1,7 +1,18 @@
-WITH int_dim_customer__deduplicated AS (
+WITH int_dim_customer__fill_null_user AS (
+    SELECT
+        -- Nếu user_id NULL → dùng device_id làm đại diện
+        COALESCE(user_id, CONCAT('guest_', device_id)) AS user_id,
+        device_id,
+        user_agent,
+        resolution,
+        email_address
+    FROM {{ ref('stg_fact_sales_order') }}
+),
+
+int_dim_customer__deduplicated AS (
     SELECT *,
         ROW_NUMBER() OVER (PARTITION BY user_id) AS rn
-    FROM {{ ref('stg_fact_sales_order') }}
+    FROM int_dim_customer__fill_null_user
 ),
 
 int_dim_customer__gen_key AS (

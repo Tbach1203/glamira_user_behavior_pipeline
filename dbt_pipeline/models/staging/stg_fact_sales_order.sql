@@ -3,7 +3,7 @@ WITH stg_fact_sales_order__rename_col AS (
     ip AS ip_address,
     user_agent,
     resolution,
-    NULLIF(TRIM(CAST(user_id_db AS STRING)), '') AS user_id,
+    COALESCE(user_id_db,CONCAT('guest_', device_id)) AS user_id, 
     device_id,
     store_id,
     order_id,
