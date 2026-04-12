@@ -1,7 +1,6 @@
 WITH int_dim_customer__fill_null_user AS (
     SELECT
-        -- Nếu user_id NULL → dùng device_id làm đại diện
-        COALESCE(user_id, CONCAT('guest_', device_id)) AS user_id,
+        user_id,
         device_id,
         user_agent,
         resolution,

@@ -3,7 +3,8 @@ WITH stg_fact_sales_order__rename_col AS (
     ip AS ip_address,
     user_agent,
     resolution,
-    COALESCE(user_id_db,CONCAT('guest_', device_id)) AS user_id, 
+    -- Nếu user_id NULL → dùng device_id làm đại diện
+    COALESCE(NULLIF(TRIM(user_id_db), ''), CONCAT('guest_', device_id)) AS user_id, 
     device_id,
     store_id,
     order_id,
