@@ -21,13 +21,14 @@ WITH stg_fact_sales_order__rename_col AS (
 ),
 
 stg_fact_sales_order__deduplicated AS (
-  SELECT DISTINCT * 
+  SELECT *,
+    ROW_NUMBER() OVER(PARTITION BY order_id, product_id) AS rn
   FROM stg_fact_sales_order__rename_col
 ),
 
 stg_fact_sales_order__clean_price AS (
   SELECT
-    * EXCEPT (item_price_raw),
+    * EXCEPT (item_price_raw, rn),
     item_price_raw,
     NULLIF(
       SAFE_CAST(
@@ -45,6 +46,7 @@ stg_fact_sales_order__clean_price AS (
       0
     ) AS item_price
   FROM stg_fact_sales_order__deduplicated
+  WHERE rn = 1 
 ),
 
 stg_fact_sales_order__normalize_currency AS (
@@ -109,20 +111,5 @@ stg_fact_sales_order__exchange_rate AS (
     ON s.currency_code = e.currency_code
 )
 
-SELECT 
-  order_id,
-  product_id,
-  user_id,
-  ip_address,
-  user_agent,
-  resolution,
-  device_id,
-  store_id,
-  email_address,
-  order_local_time,
-  order_timestamp,
-  currency_code,
-  order_qty,
-  item_price,
-  item_price_usd
+SELECT *
 FROM stg_fact_sales_order__exchange_rate

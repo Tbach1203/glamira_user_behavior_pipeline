@@ -1,34 +1,111 @@
 version: 2
 
 models:
-  - name: dim_date
-    description: "Date dimension table"
+  - name: dim_product
+    description: "Dimension bảng sản phẩm — đã có default rows"
     columns:
-      - name: date_key
+      - name: product_key
         description: "Surrogate key"
         tests:
-          - not_null
           - unique
+          - not_null
 
-      - name: full_date
-        description: "Calendar date"
+      - name: product_id
         tests:
           - unique
-
-  - name: dim_location
-    description: "Location dimension table"
-    columns:
-      - name: location_key
-        description: "Surrogate key"
-        tests:
           - not_null
-          - unique
 
   - name: dim_customer
-    description: "Customer dimension table"
+    description: >
+      Dimension bảng khách hàng.
+      guest users với user_id = guest_{device_id}.
+      Có default rows: -1 Unknown
     columns:
-      - name: location_key
-        description: "Surrogate key"
+      - name: customer_key
+        description: "Surrogate key FARM_FINGERPRINT(user_id)"
+        tests:
+          - unique
+          - not_null
+
+      - name: user_id
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_date
+    description: "Dimension bảng ngày — có default rows"
+    columns:
+      - name: date_key
+        tests:
+          - unique
+          - not_null
+
+      - name: full_date
+        tests:
+          - unique
+
+      - name: is_weekend
         tests:
           - not_null
+          - accepted_values:
+              values: [true, false]
+              quote: false
+
+  - name: dim_location
+    description: >
+      Dimension bảng địa điểm từ IP lookup.
+      Có default rows: -1 Unknown.
+    columns:
+      - name: location_key
+        description: "Surrogate key FARM_FINGERPRINT(country_name, city_name)"
+        tests:
           - unique
+          - not_null
+
+  - name: fact_sales_order
+    description: >
+      Fact bảng đơn hàng — grain: 1 row per product per order.
+      Join với tất cả dim tables.
+      NULL keys được map về default row -1.
+    columns:
+      - name: fact_sales_order_key
+        description: "Surrogate key FARM_FINGERPRINT(order_id, product_id)"
+        tests:
+          - unique
+          - not_null
+
+      - name: product_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_product')
+              field: product_key
+
+      - name: date_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_key
+
+      - name: customer_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customer')
+              field: customer_key
+
+      - name: location_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_location')
+              field: location_key
+
+      - name: order_id
+        tests:
+          - not_null
+
+      - name: order_qty
+        tests:
+          - not_null

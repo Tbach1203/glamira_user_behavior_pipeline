@@ -13,15 +13,17 @@ FROM {{source('glamira_src', 'product_info')}}
 ),
 
 stg_dim_product__deduplicated AS (
-  SELECT DISTINCT *
-  FROM stg_dim_product__rename_col
+    SELECT *,
+        ROW_NUMBER() OVER (PARTITION BY product_id) AS rn
+    FROM stg_dim_product__rename_col
 ),
 
 stg_dim_product__nomarlize_currency AS (
   SELECT
-    *,
+    * EXCEPT(rn),
     TRIM(UPPER(REGEXP_REPLACE(min_price_format, r'[\d,\.\s\'\'/]', ''))) AS raw_symbol
   FROM stg_dim_product__deduplicated
+  WHERE rn = 1
 ),
 
 stg_dim_product__mapped_currency AS (
