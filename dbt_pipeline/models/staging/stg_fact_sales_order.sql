@@ -99,11 +99,10 @@ stg_fact_sales_order__normalize_currency AS (
   FROM stg_fact_sales_order__clean_price
 ),
 
-stg_fact_sales_order__with_exchange_rate AS (
+stg_fact_sales_order__exchange_rate AS (
   SELECT
-    s.* EXCEPT (currency_code),
-    s.currency_code,
-    ROUND(s.item_price * e.rate_to_usd, 2) AS item_price_usd
+    s.*,
+    SAFE_CAST(ROUND(s.item_price * e.rate_to_usd, 2) AS NUMERIC) AS item_price_usd
   FROM stg_fact_sales_order__normalize_currency s
   LEFT JOIN {{ ref('exchange_rates') }} e
     ON s.currency_code = e.currency_code
@@ -125,4 +124,4 @@ SELECT
   order_qty,
   item_price,
   item_price_usd
-FROM stg_fact_sales_order__with_exchange_rate
+FROM stg_fact_sales_order__exchange_rate
