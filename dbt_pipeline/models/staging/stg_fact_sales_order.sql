@@ -13,6 +13,7 @@ WITH stg_fact_sales_order__rename_col AS (
     cart_products.amount AS order_qty,
     cart_products.price AS item_price_raw,
     cart_products.currency AS currency_code_raw,
+    REGEXP_EXTRACT(current_url,r'https?://(?:www\.)?([^/]+)') AS domain, 
     DATE(PARSE_TIMESTAMP('%Y-%m-%d %H:%M:%S', local_time)) AS order_local_time,
     time_stamp AS order_timestamp
   FROM {{source('glamira_src', 'glamira_raw')}},
@@ -21,9 +22,12 @@ WITH stg_fact_sales_order__rename_col AS (
 ),
 
 stg_fact_sales_order__deduplicated AS (
-  SELECT *,
-    ROW_NUMBER() OVER(PARTITION BY order_id, product_id) AS rn
-  FROM stg_fact_sales_order__rename_col
+    SELECT *,
+        ROW_NUMBER() OVER (PARTITION BY order_id, product_id ORDER BY
+          CASE
+            WHEN TRIM(item_price_raw) NOT IN ('0,00', '0.00') AND TRIM(item_price_raw) != '' THEN 0 ELSE 1 END ASC) 
+            AS rn
+    FROM stg_fact_sales_order__rename_col
 ),
 
 stg_fact_sales_order__clean_price AS (
@@ -93,22 +97,35 @@ stg_fact_sales_order__normalize_currency AS (
       WHEN 'CRC ₡'   THEN 'CRC'  
       WHEN 'GTQ Q'   THEN 'GTQ'   
       WHEN 'din.'    THEN 'RSD'   
-
       -- Generic $ → USD 
       WHEN '$'       THEN 'USD'
-      WHEN ''        THEN 'UNKNOWN'
       ELSE NULL  
-    END AS currency_code
+    END AS currency_code_from_symbol
   FROM stg_fact_sales_order__clean_price
+),
+
+stg_fact_sales_order__currency_resolved AS (
+    SELECT
+        f.* EXCEPT (currency_code_from_symbol),
+        COALESCE(f.currency_code_from_symbol, er.currency_code, 'USD') AS currency_code,
+        CASE
+            WHEN f.currency_code_from_symbol IS NOT NULL THEN 'from_symbol'
+            WHEN er.currency_code IS NOT NULL THEN 'from_domain'
+            ELSE 'default_usd'
+        END AS currency_source
+
+    FROM stg_fact_sales_order__normalize_currency f
+    LEFT JOIN {{ ref('exchange_rates') }} er
+        ON f.domain = er.domain
 ),
 
 stg_fact_sales_order__exchange_rate AS (
   SELECT
-    s.*,
-    SAFE_CAST(ROUND(s.item_price * e.rate_to_usd, 2) AS NUMERIC) AS item_price_usd
-  FROM stg_fact_sales_order__normalize_currency s
+    f.*,
+    SAFE_CAST(ROUND(f.item_price * e.rate_to_usd, 2) AS NUMERIC) AS item_price_usd
+  FROM stg_fact_sales_order__currency_resolved f
   LEFT JOIN {{ ref('exchange_rates') }} e
-    ON s.currency_code = e.currency_code
+    ON f.currency_code = e.currency_code
 )
 
 SELECT *
