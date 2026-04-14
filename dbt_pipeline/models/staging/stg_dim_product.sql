@@ -3,7 +3,7 @@ WITH stg_dim_product__rename_col AS (
     product_id,
     name AS product_name,
     SAFE_CAST(category AS INT) AS category_id,
-    category_name,
+    COALESCE(NULLIF(TRIM(category_name), ''), 'Unknown') AS category_name,
     SAFE_CAST(price AS NUMERIC) AS unit_price,
     SAFE_CAST(min_price AS NUMERIC) AS min_price,
     SAFE_CAST(max_price AS NUMERIC) AS max_price,

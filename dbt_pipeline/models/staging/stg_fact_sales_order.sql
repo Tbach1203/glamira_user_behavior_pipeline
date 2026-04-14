@@ -8,7 +8,7 @@ WITH stg_fact_sales_order__rename_col AS (
     device_id,
     store_id,
     order_id,
-    COALESCE(email_address, 'Unknown') AS email_address,
+    COALESCE(NULLIF(TRIM(email_address), ''), 'Unknown') AS email_address,
     SAFE_CAST(cart_products.product_id AS INT) AS product_id,
     cart_products.amount AS order_qty,
     cart_products.price AS item_price_raw,
