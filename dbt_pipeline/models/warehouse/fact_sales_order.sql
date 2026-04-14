@@ -12,6 +12,7 @@ WITH fact_sales_order__join AS (
         f.order_local_time,
         f.order_timestamp,
         f.currency_code,
+        f.item_price_status,
 
         -- Measures
         f.order_qty,

@@ -8,7 +8,7 @@ WITH stg_fact_sales_order__rename_col AS (
     device_id,
     store_id,
     order_id,
-    email_address,
+    COALESCE(email_address, 'Unknown') AS email_address,
     SAFE_CAST(cart_products.product_id AS INT) AS product_id,
     cart_products.amount AS order_qty,
     cart_products.price AS item_price_raw,
@@ -46,9 +46,10 @@ stg_fact_sales_order__clean_price AS (
           ELSE REGEXP_REPLACE(TRIM(item_price_raw), r',', '')
         END
         AS NUMERIC
-      ),
-      0
-    ) AS item_price
+      ),0) AS item_price, 
+    CASE
+      WHEN TRIM(item_price_raw) IN ('0,00', '0.00', '') THEN 'zero_price' ELSE 'valid'
+      END AS item_price_status
   FROM stg_fact_sales_order__deduplicated
   WHERE rn = 1 
 ),
