@@ -1,7 +1,7 @@
 import argparse
 from src.data.process_ip_locations import process_ip_locations
 from etl.extract.extract_urls import product_map, save_urls
-from src.data.product_collection import collect_product
+from etl.extract.product_collection import collect_product
 from config.connect import connect
 from etl.load.load_data_to_mongodb import export_to_mongodb
 from etl.load.load_data_to_gcs import export_to_gcs
@@ -43,11 +43,11 @@ if __name__ == "__main__":
     arg = parse_args()
     client = connect()
     db = client["countly"]
-    # process_ip_locations(arg.bin_file, arg.output_location_path, db)
-    # products = product_map(db)
-    # save_urls(products, arg.urls_path)
-    # collect_product(arg.urls_path, arg.output_product_path, arg.failed_product_path)
-    # export_to_mongodb(arg.output_location_path, arg.output_product_path, db)
+    process_ip_locations(arg.bin_file, arg.output_location_path, db)
+    products = product_map(db)
+    save_urls(products, arg.urls_path)
+    collect_product(arg.urls_path, arg.output_product_path, arg.failed_product_path)
+    export_to_mongodb(arg.output_location_path, arg.output_product_path, db)
     export_to_gcs(arg.output_location_path, arg.output_product_path, db)
 
     
