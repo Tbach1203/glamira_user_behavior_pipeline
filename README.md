@@ -178,6 +178,7 @@ CREATE TABLE `raw_layer.load_tracking` (
 ![Report](docs/images/glamira_report.png)
 
 ## Getting Started
+### 1. Clone the repository
 ```bash
 git clone https://github.com/Tbach1203/glamira_user_behavior_pipeline.git
 cd glamira_user_behavior_pipeline
