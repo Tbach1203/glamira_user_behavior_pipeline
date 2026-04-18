@@ -117,9 +117,7 @@ job_config = bigquery.LoadJobConfig(
 
 #### 2. `export-ip-locations`
 Loads IP geolocation data (`.jsonl`) into `raw_layer.ip_locations`.
-
 **Trigger:** New file uploaded to GCS matching prefix `ip_locations` and suffix `.jsonl`
-
 **Idempotency:** Checks `load_tracking` via `SELECT COUNT(*)` before loading — marks file as loaded after success via `INSERT`.
 
 ```python
@@ -133,9 +131,7 @@ def load_ip_locations(cloud_event):
 
 #### 3. `export-product-info`
 Loads product catalog data (`.jsonl`) into `raw_layer.product_info`.
-
 **Trigger:** New file uploaded to GCS matching prefix `product_info` and suffix `.jsonl`
-
 **Idempotency:** Same pattern as `export-ip-locations` — check → load → mark.
 
 ```python
