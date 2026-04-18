@@ -152,7 +152,7 @@ A shared deduplication table prevents duplicate BigQuery loads when Cloud Functi
 
 ```sql
 -- BigQuery DDL
-CREATE TABLE `glowing-market-485009-u8.raw_layer.load_tracking` (
+CREATE TABLE `raw_layer.load_tracking` (
     file_name   STRING    NOT NULL,
     loaded_at   TIMESTAMP NOT NULL
 );
